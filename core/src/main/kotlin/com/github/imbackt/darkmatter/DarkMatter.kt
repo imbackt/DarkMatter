@@ -22,4 +22,10 @@ class DarkMatter : KtxGame<DarkMatterScreen>() {
         addScreen(GameScreen(this))
         setScreen<GameScreen>()
     }
+
+    override fun dispose() {
+        super.dispose()
+        LOG.debug { "Sprites in batch: ${(batch as SpriteBatch).maxSpritesInBatch}" }
+        batch.dispose()
+    }
 }

@@ -36,6 +36,5 @@ class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
 
     override fun dispose() {
         texture.dispose()
-        batch.dispose()
     }
 }
