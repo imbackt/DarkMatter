@@ -25,7 +25,7 @@ class PlayerInputSystem(
         val transform = entity[TransformComponent.mapper]
         require(transform != null) { "Entity |entity| must have TransformComponent. entity=$entity" }
 
-        tmpVec.x =Gdx.input.x.toFloat()
+        tmpVec.x = Gdx.input.x.toFloat()
         gameViewport.unproject(tmpVec)
         val diffX = tmpVec.x - transform.position.x - transform.size.x * 0.5f
         facing.direction = when {
