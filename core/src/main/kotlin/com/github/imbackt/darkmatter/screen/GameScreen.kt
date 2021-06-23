@@ -1,6 +1,6 @@
 package com.github.imbackt.darkmatter.screen
 
-import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.github.imbackt.darkmatter.DarkMatter
 import com.github.imbackt.darkmatter.ecs.component.FacingComponent
 import com.github.imbackt.darkmatter.ecs.component.GraphicComponent
@@ -19,17 +19,34 @@ class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
         LOG.debug { "Game screen is shown" }
 
         engine.entity {
-            with<TransformComponent>() {
-                position.set(MathUtils.random(0f, 9f), MathUtils.random(0f, 16f), 0f)
+            with<TransformComponent> {
+                position.set(4.5f, 8f, 0f)
             }
             with<GraphicComponent>()
             with<PlayerComponent>()
             with<FacingComponent>()
         }
+        engine.entity {
+            with<TransformComponent> {
+                position.set(1f, 1f, 0f)
+            }
+            with<GraphicComponent> {
+                setSpriteRegion(game.graphicsAtlas.findRegion("ship_left"))
+            }
+        }
+        engine.entity {
+            with<TransformComponent> {
+                position.set(7f, 1f, 0f)
+            }
+            with<GraphicComponent> {
+                setSpriteRegion(game.graphicsAtlas.findRegion("ship_right"))
+            }
+        }
     }
 
     override fun render(delta: Float) {
+        (game.batch as SpriteBatch).renderCalls = 0
         engine.update(delta)
-
+        LOG.debug { "RenderCalls: ${(game.batch as SpriteBatch).renderCalls}" }
     }
 }
