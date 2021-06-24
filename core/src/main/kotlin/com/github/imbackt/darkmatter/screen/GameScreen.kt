@@ -2,6 +2,7 @@ package com.github.imbackt.darkmatter.screen
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.github.imbackt.darkmatter.DarkMatter
+import com.github.imbackt.darkmatter.UNIT_SCALE
 import com.github.imbackt.darkmatter.V_WIDTH
 import com.github.imbackt.darkmatter.ecs.component.*
 import com.github.imbackt.darkmatter.ecs.system.DAMAGE_AREA_HEIGHT
@@ -19,14 +20,24 @@ class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
     override fun show() {
         LOG.debug { "Game screen is shown" }
 
-        engine.entity {
+        val playerShip = engine.entity {
             with<TransformComponent> {
-                setInitialPosition(4.5f, 8f, 0f)
+                setInitialPosition(4.5f, 8f, -1f)
             }
             with<MoveComponent>()
             with<GraphicComponent>()
             with<PlayerComponent>()
             with<FacingComponent>()
+        }
+
+        engine.entity {
+            with<TransformComponent>()
+            with<AttachComponent> {
+                entity = playerShip
+                offset.set(1f * UNIT_SCALE, -6f * UNIT_SCALE)
+            }
+            with<GraphicComponent>()
+            with<AnimationComponent> { type = AnimationType.FIRE }
         }
 
         engine.entity {
