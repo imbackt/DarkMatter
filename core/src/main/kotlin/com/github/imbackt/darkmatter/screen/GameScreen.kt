@@ -7,8 +7,10 @@ import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.log.debug
 import ktx.log.logger
+import kotlin.math.min
 
 private val LOG = logger<GameScreen>()
+private const val MAX_DELTA_TIME = 1 / 20f
 
 class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
 
@@ -17,7 +19,7 @@ class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
 
         engine.entity {
             with<TransformComponent> {
-                position.set(4.5f, 8f, 0f)
+                setInitialPosition(4.5f, 8f, 0f)
             }
             with<MoveComponent>()
             with<GraphicComponent>()
@@ -28,7 +30,7 @@ class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
 
     override fun render(delta: Float) {
         (game.batch as SpriteBatch).renderCalls = 0
-        engine.update(delta)
+        engine.update(min(MAX_DELTA_TIME, delta))
         LOG.debug { "RenderCalls: ${(game.batch as SpriteBatch).renderCalls}" }
     }
 }
