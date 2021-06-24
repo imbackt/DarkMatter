@@ -2,7 +2,9 @@ package com.github.imbackt.darkmatter.screen
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.github.imbackt.darkmatter.DarkMatter
+import com.github.imbackt.darkmatter.V_WIDTH
 import com.github.imbackt.darkmatter.ecs.component.*
+import com.github.imbackt.darkmatter.ecs.system.DAMAGE_AREA_HEIGHT
 import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.log.debug
@@ -25,6 +27,17 @@ class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
             with<GraphicComponent>()
             with<PlayerComponent>()
             with<FacingComponent>()
+        }
+
+        engine.entity {
+            with<TransformComponent>() {
+                size.set(
+                    V_WIDTH.toFloat(),
+                    DAMAGE_AREA_HEIGHT
+                )
+            }
+            with<AnimationComponent> { type = AnimationType.DARK_MATTER }
+            with<GraphicComponent>()
         }
     }
 
