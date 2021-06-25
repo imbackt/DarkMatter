@@ -16,12 +16,12 @@ import ktx.log.debug
 import ktx.log.logger
 
 const val UNIT_SCALE = 1 / 16f
-const val V_WIDTH = 16
-const val V_HEIGHT = 9
+const val V_WIDTH = 9
+const val V_HEIGHT = 16
 private val LOG = logger<DarkMatter>()
 
 class DarkMatter : KtxGame<DarkMatterScreen>() {
-    val gameViewport = FitViewport(V_HEIGHT.toFloat(), V_WIDTH.toFloat())
+    val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
     val batch: Batch by lazy { SpriteBatch() }
 
     val graphicsAtlas by lazy { TextureAtlas(Gdx.files.internal("graphics/graphics.atlas")) }
@@ -30,6 +30,7 @@ class DarkMatter : KtxGame<DarkMatterScreen>() {
         PooledEngine().apply {
             addSystem(PlayerInputSystem(gameViewport))
             addSystem(MoveSystem())
+            addSystem(PowerUpSystem())
             addSystem(DamageSystem())
             addSystem(
                 PlayerAnimationSystem(
