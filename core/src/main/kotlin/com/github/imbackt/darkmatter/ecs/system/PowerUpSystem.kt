@@ -74,7 +74,7 @@ class PowerUpSystem :
             with<TransformComponent> {
                 setInitialPosition(x, y, 0f)
             }
-            with<PowerUpComponent>()
+            with<PowerUpComponent> { type = powerUpType }
             with<AnimationComponent> { type = powerUpType.animationType }
             with<GraphicComponent>()
             with<MoveComponent> { speed.y = POWER_UP_SPEED }
