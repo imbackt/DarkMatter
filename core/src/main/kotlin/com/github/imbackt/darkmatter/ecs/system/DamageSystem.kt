@@ -5,6 +5,9 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.github.imbackt.darkmatter.ecs.component.PlayerComponent
 import com.github.imbackt.darkmatter.ecs.component.RemoveComponent
 import com.github.imbackt.darkmatter.ecs.component.TransformComponent
+import com.github.imbackt.darkmatter.event.GameEventManager
+import com.github.imbackt.darkmatter.event.GameEventPlayerDeath
+import com.github.imbackt.darkmatter.event.GameEventType
 import ktx.ashley.addComponent
 import ktx.ashley.allOf
 import ktx.ashley.exclude
@@ -15,7 +18,9 @@ const val DAMAGE_AREA_HEIGHT = 2f
 private const val DAMAGE_PER_SECOND = 25f
 private const val DEATH_EXPLOSION_DURATION = 0.9f
 
-class DamageSystem :
+class DamageSystem(
+    private val gameEventManager: GameEventManager
+) :
     IteratingSystem(allOf(PlayerComponent::class, TransformComponent::class).exclude(RemoveComponent::class).get()) {
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
@@ -37,6 +42,12 @@ class DamageSystem :
 
             player.life -= damage
             if (player.life <= 0) {
+                gameEventManager.dispatchEvent(
+                    GameEventType.PLAYER_DEATH,
+                    GameEventPlayerDeath.apply {
+                        this.distance = player.distance
+                    }
+                )
                 entity.addComponent<RemoveComponent>(engine) {
                     delay = DEATH_EXPLOSION_DURATION
                 }

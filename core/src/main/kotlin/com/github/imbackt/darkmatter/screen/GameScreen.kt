@@ -6,6 +6,10 @@ import com.github.imbackt.darkmatter.UNIT_SCALE
 import com.github.imbackt.darkmatter.V_WIDTH
 import com.github.imbackt.darkmatter.ecs.component.*
 import com.github.imbackt.darkmatter.ecs.system.DAMAGE_AREA_HEIGHT
+import com.github.imbackt.darkmatter.event.GameEvent
+import com.github.imbackt.darkmatter.event.GameEventListener
+import com.github.imbackt.darkmatter.event.GameEventPlayerDeath
+import com.github.imbackt.darkmatter.event.GameEventType
 import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.log.debug
@@ -15,11 +19,32 @@ import kotlin.math.min
 private val LOG = logger<GameScreen>()
 private const val MAX_DELTA_TIME = 1 / 20f
 
-class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
+class GameScreen(game: DarkMatter) : DarkMatterScreen(game), GameEventListener {
 
     override fun show() {
         LOG.debug { "Game screen is shown" }
+        gameEventManager.addListener(GameEventType.PLAYER_DEATH, this)
 
+        spawnPlayer()
+
+        engine.entity {
+            with<TransformComponent>() {
+                size.set(
+                    V_WIDTH.toFloat(),
+                    DAMAGE_AREA_HEIGHT
+                )
+            }
+            with<AnimationComponent> { type = AnimationType.DARK_MATTER }
+            with<GraphicComponent>()
+        }
+    }
+
+    override fun hide() {
+        super.hide()
+        gameEventManager.removeListener(this)
+    }
+
+    private fun spawnPlayer() {
         val playerShip = engine.entity {
             with<TransformComponent> {
                 setInitialPosition(4.5f, 8f, -1f)
@@ -39,22 +64,18 @@ class GameScreen(game: DarkMatter) : DarkMatterScreen(game) {
             with<GraphicComponent>()
             with<AnimationComponent> { type = AnimationType.FIRE }
         }
-
-        engine.entity {
-            with<TransformComponent>() {
-                size.set(
-                    V_WIDTH.toFloat(),
-                    DAMAGE_AREA_HEIGHT
-                )
-            }
-            with<AnimationComponent> { type = AnimationType.DARK_MATTER }
-            with<GraphicComponent>()
-        }
     }
 
     override fun render(delta: Float) {
         (game.batch as SpriteBatch).renderCalls = 0
         engine.update(min(MAX_DELTA_TIME, delta))
         LOG.debug { "RenderCalls: ${(game.batch as SpriteBatch).renderCalls}" }
+    }
+
+    override fun onEvent(type: GameEventType, data: GameEvent?) {
+        if (type == GameEventType.PLAYER_DEATH) {
+            val eventData = data as GameEventPlayerDeath
+            spawnPlayer()
+        }
     }
 }
