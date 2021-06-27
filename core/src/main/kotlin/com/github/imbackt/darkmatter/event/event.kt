@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.ObjectMap
 import com.github.imbackt.darkmatter.ecs.component.PowerUpType
 import ktx.collections.GdxSet
+import ktx.collections.getOrPut
 import kotlin.reflect.KClass
 
 sealed class GameEvent {
@@ -37,12 +38,7 @@ class GameEventManager {
     private val listeners = ObjectMap<KClass<out GameEvent>, GdxSet<GameEventListener>>()
 
     fun addListener(type: KClass<out GameEvent>, listener: GameEventListener) {
-        var eventListeners = listeners[type]
-        if (eventListeners == null) {
-            eventListeners = GdxSet()
-            listeners.put(type, eventListeners)
-        }
-        eventListeners.add(listener)
+        listeners.getOrPut(type) { GdxSet() }.add(listener)
     }
 
     fun removeListener(type: KClass<out GameEvent>, listener: GameEventListener) {
@@ -50,7 +46,7 @@ class GameEventManager {
     }
 
     fun removeListener(listener: GameEventListener) {
-        listeners.values().forEach { it.remove(listener) }
+        ObjectMap.Values(listeners).forEach { it.remove(listener) }
     }
 
     fun dispatchEvent(event: GameEvent) {
