@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.github.imbackt.darkmatter.DarkMatter
 import com.github.imbackt.darkmatter.UNIT_SCALE
 import com.github.imbackt.darkmatter.V_WIDTH
+import com.github.imbackt.darkmatter.asset.MusicAsset
 import com.github.imbackt.darkmatter.ecs.component.*
 import com.github.imbackt.darkmatter.ecs.system.DAMAGE_AREA_HEIGHT
 import com.github.imbackt.darkmatter.event.GameEvent
@@ -27,6 +28,7 @@ class GameScreen(
         LOG.debug { "Game screen is shown" }
         gameEventManager.addListener(GameEvent.PlayerDeath::class, this)
 
+        audioService.play(MusicAsset.GAME)
         spawnPlayer()
 
         engine.entity {
@@ -71,6 +73,7 @@ class GameScreen(
     override fun render(delta: Float) {
         (game.batch as SpriteBatch).renderCalls = 0
         engine.update(min(MAX_DELTA_TIME, delta))
+        audioService.update()
         LOG.debug { "RenderCalls: ${(game.batch as SpriteBatch).renderCalls}" }
     }
 
@@ -80,6 +83,7 @@ class GameScreen(
                 spawnPlayer()
             }
             GameEvent.CollectPowerUp -> TODO()
+            GameEvent.PlayerHit -> TODO()
         }
     }
 }

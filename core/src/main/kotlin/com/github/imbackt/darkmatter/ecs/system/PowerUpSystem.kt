@@ -5,6 +5,7 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.github.imbackt.darkmatter.V_WIDTH
+import com.github.imbackt.darkmatter.audio.AudioService
 import com.github.imbackt.darkmatter.ecs.component.*
 import com.github.imbackt.darkmatter.event.GameEvent
 import com.github.imbackt.darkmatter.event.GameEventManager
@@ -30,7 +31,8 @@ private class SpawnPattern(
 )
 
 class PowerUpSystem(
-    private val gameEventManager: GameEventManager
+    private val gameEventManager: GameEventManager,
+    private val audioService: AudioService
 ) :
     IteratingSystem(allOf(PowerUpComponent::class, TransformComponent::class).exclude(RemoveComponent::class).get()) {
     private val playerBoundingRect = Rectangle()
@@ -124,6 +126,9 @@ class PowerUpSystem(
                 it.life = min(it.maxShield, it.life + powerUpType.lifeGain)
                 it.shield = min(it.maxShield, it.shield + powerUpType.shieldGain)
             }
+
+            audioService.play(powerUpType.soundAsset)
+
             gameEventManager.dispatchEvent(GameEvent.CollectPowerUp.apply {
                 this.player = player
                 this.type = powerUpType

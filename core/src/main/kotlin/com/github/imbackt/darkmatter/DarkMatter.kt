@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.github.imbackt.darkmatter.asset.TextureAsset
 import com.github.imbackt.darkmatter.asset.TextureAtlasAsset
+import com.github.imbackt.darkmatter.audio.AudioService
+import com.github.imbackt.darkmatter.audio.DefaultAudioService
 import com.github.imbackt.darkmatter.ecs.system.*
 import com.github.imbackt.darkmatter.event.GameEventManager
 import com.github.imbackt.darkmatter.screen.DarkMatterScreen
@@ -35,13 +37,14 @@ class DarkMatter : KtxGame<DarkMatterScreen>() {
         KtxAsync.initiate()
         AssetStorage()
     }
+    val audioService: AudioService by lazy { DefaultAudioService(assets) }
 
     val engine: Engine by lazy {
         PooledEngine().apply {
             val graphicsAtlas = assets[TextureAtlasAsset.GAME_GRAPHICS.descriptor]
             addSystem(PlayerInputSystem(gameViewport))
             addSystem(MoveSystem())
-            addSystem(PowerUpSystem(gameEventManager))
+            addSystem(PowerUpSystem(gameEventManager, audioService))
             addSystem(DamageSystem(gameEventManager))
             addSystem(CameraShakeSystem(gameViewport.camera, gameEventManager))
             addSystem(

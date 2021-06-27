@@ -1,6 +1,7 @@
 package com.github.imbackt.darkmatter.screen
 
 import com.github.imbackt.darkmatter.DarkMatter
+import com.github.imbackt.darkmatter.asset.SoundAsset
 import com.github.imbackt.darkmatter.asset.TextureAsset
 import com.github.imbackt.darkmatter.asset.TextureAtlasAsset
 import kotlinx.coroutines.joinAll
@@ -18,7 +19,8 @@ class LoadingScreen(game: DarkMatter) : DarkMatterScreen(game) {
         //queue asset loading
         val assetReferences = gdxArrayOf(
             TextureAsset.values().map { assets.loadAsync(it.descriptor) },
-            TextureAtlasAsset.values().map { assets.loadAsync(it.descriptor) }
+            TextureAtlasAsset.values().map { assets.loadAsync(it.descriptor) },
+            SoundAsset.values().map { assets.loadAsync(it.descriptor) }
         ).flatten()
 
         //once assets are loaded -> change to GameScreen
