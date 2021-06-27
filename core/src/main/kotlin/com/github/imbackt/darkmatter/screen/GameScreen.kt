@@ -1,5 +1,6 @@
 package com.github.imbackt.darkmatter.screen
 
+import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.github.imbackt.darkmatter.DarkMatter
 import com.github.imbackt.darkmatter.UNIT_SCALE
@@ -17,7 +18,10 @@ import kotlin.math.min
 private val LOG = logger<GameScreen>()
 private const val MAX_DELTA_TIME = 1 / 20f
 
-class GameScreen(game: DarkMatter) : DarkMatterScreen(game), GameEventListener {
+class GameScreen(
+    game: DarkMatter,
+    val engine: Engine = game.engine,
+) : DarkMatterScreen(game), GameEventListener {
 
     override fun show() {
         LOG.debug { "Game screen is shown" }
