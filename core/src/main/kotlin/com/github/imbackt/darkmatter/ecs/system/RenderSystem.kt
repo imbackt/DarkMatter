@@ -11,7 +11,9 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.imbackt.darkmatter.ecs.component.GraphicComponent
 import com.github.imbackt.darkmatter.ecs.component.PowerUpType
 import com.github.imbackt.darkmatter.ecs.component.TransformComponent
-import com.github.imbackt.darkmatter.event.*
+import com.github.imbackt.darkmatter.event.GameEvent
+import com.github.imbackt.darkmatter.event.GameEventListener
+import com.github.imbackt.darkmatter.event.GameEventManager
 import ktx.ashley.allOf
 import ktx.ashley.get
 import ktx.graphics.use
@@ -38,12 +40,12 @@ class RenderSystem(
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
-        gameEventManager.addListener(GameEventType.COLLECT_POWER_UP, this)
+        gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
-        gameEventManager.removeListener(GameEventType.COLLECT_POWER_UP, this)
+        gameEventManager.removeListener(GameEvent.CollectPowerUp::class, this)
     }
 
     override fun update(deltaTime: Float) {
@@ -89,14 +91,12 @@ class RenderSystem(
         }
     }
 
-    override fun onEvent(type: GameEventType, data: GameEvent?) {
-        if (type == GameEventType.COLLECT_POWER_UP) {
-            val eventData = data as GameEventCollectPowerUp
-            if (eventData.type == PowerUpType.SPEED_1) {
-                backgroundScrollSpeed.y -= 0.25f
-            } else if (eventData.type == PowerUpType.SPEED_2) {
-                backgroundScrollSpeed.y -= 0.5f
-            }
+    override fun onEvent(event: GameEvent) {
+        val powerUpEvent = event as GameEvent.CollectPowerUp
+        if (powerUpEvent.type == PowerUpType.SPEED_1) {
+            backgroundScrollSpeed.y -= 0.25f
+        } else if (powerUpEvent.type == PowerUpType.SPEED_2) {
+            backgroundScrollSpeed.y -= 0.5f
         }
     }
 }
