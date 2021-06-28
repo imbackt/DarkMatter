@@ -4,9 +4,11 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Application.LOG_DEBUG
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.github.imbackt.darkmatter.asset.MusicAsset
 import com.github.imbackt.darkmatter.asset.TextureAsset
 import com.github.imbackt.darkmatter.asset.TextureAtlasAsset
 import com.github.imbackt.darkmatter.audio.AudioService
@@ -38,6 +40,7 @@ class DarkMatter : KtxGame<DarkMatterScreen>() {
         AssetStorage()
     }
     val audioService: AudioService by lazy { DefaultAudioService(assets) }
+    val preferences: Preferences by lazy { Gdx.app.getPreferences("dark-matter") }
 
     val engine: Engine by lazy {
         PooledEngine().apply {
@@ -80,6 +83,9 @@ class DarkMatter : KtxGame<DarkMatterScreen>() {
     override fun dispose() {
         super.dispose()
         LOG.debug { "Sprites in batch: ${(batch as SpriteBatch).maxSpritesInBatch}" }
+        MusicAsset.values().forEach {
+            LOG.debug { "ReferenceCount $it: ${assets.getReferenceCount(it.descriptor)}" }
+        }
         batch.dispose()
         assets.dispose()
     }

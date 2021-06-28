@@ -32,7 +32,9 @@ enum class SoundAsset(
     LIFE("life.wav"),
     SHIELD("shield.wav"),
     DAMAGE("damage.wav"),
-    BLOCK("block.wav")
+    BLOCK("block.wav"),
+    SPAWN("spawn.wav"),
+    EXPLOSION("explosion.wav")
 }
 
 enum class MusicAsset(
@@ -40,5 +42,7 @@ enum class MusicAsset(
     directory: String = "music",
     val descriptor: AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ) {
-    GAME("game.mp3")
+    GAME("game.mp3"),
+    GAME_OVER("gameOver.mp3"),
+    MENU("menu.mp3")
 }
