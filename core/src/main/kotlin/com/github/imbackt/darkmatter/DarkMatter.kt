@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.github.imbackt.darkmatter.asset.MusicAsset
+import com.github.imbackt.darkmatter.asset.ShaderProgramAsset
 import com.github.imbackt.darkmatter.asset.TextureAsset
 import com.github.imbackt.darkmatter.asset.TextureAtlasAsset
 import com.github.imbackt.darkmatter.audio.AudioService
@@ -62,6 +63,7 @@ class DarkMatter : KtxGame<DarkMatterScreen>() {
             addSystem(
                 RenderSystem(
                     batch,
+                    assets[ShaderProgramAsset.OUTLINE.descriptor],
                     gameViewport,
                     uiViewport,
                     assets[TextureAsset.BACKGROUND.descriptor],
