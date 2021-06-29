@@ -1,6 +1,7 @@
 package com.github.imbackt.darkmatter.screen
 
 import com.badlogic.gdx.Preferences
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.imbackt.darkmatter.DarkMatter
 import com.github.imbackt.darkmatter.audio.AudioService
@@ -15,7 +16,8 @@ abstract class DarkMatterScreen(
     val gameEventManager: GameEventManager = game.gameEventManager,
     val assets: AssetStorage = game.assets,
     val audioService: AudioService = game.audioService,
-    val preferences: Preferences = game.preferences
+    val preferences: Preferences = game.preferences,
+    val stage: Stage = game.stage
 ) : KtxScreen {
     override fun resize(width: Int, height: Int) {
         gameViewport.update(width, height, true)
